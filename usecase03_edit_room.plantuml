@@ -1,0 +1,34 @@
+@startuml
+skinparam defaultFontName "TH Sarabun New"
+
+actor "ผู้ดูแล" as Admin
+participant "UI" as UI
+participant "Microservice Room" as MSROOM
+database "Room DB" as RoomDB
+
+
+Admin -> UI      : เลือก "แก้ไข"
+activate UI
+
+UI --> UI       : แสดงฟอร์มแก้ไขห้องพัก
+
+Admin -> UI      : ปรับอัตราค่าเช่า หรือ สถานะห้องพัก
+UI --> UI       : updateFormData
+
+Admin -> UI      : เลือก "บันทึก"
+UI -> MSROOM    : updateRoom(roomId, newPrice, newStatus)
+activate MSROOM
+
+MSROOM -> RoomDB: UPDATE Room\nSET roomPrice=newPrice, status=newStatus\nWHERE roomId=${roomId}
+activate RoomDB
+
+RoomDB --> MSROOM: updateSuccess
+deactivate RoomDB
+
+MSROOM --> UI    : แสดงข้อความ "บันทึกข้อมูลเรียบร้อยแล้ว"
+MSROOM --> UI    : แสดงรายการห้องพักทั้งหมด\n(Room Number, Monthly Rent, Status)
+
+deactivate MSROOM
+deactivate UI
+
+@enduml

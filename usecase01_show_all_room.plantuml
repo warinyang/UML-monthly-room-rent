@@ -1,0 +1,27 @@
+@startuml
+skinparam defaultFontName "TH Sarabun New"
+' participant Participant as Foo
+' actor       Actor       as Foo1
+' boundary    Boundary    as Foo2
+' control     Control     as Foo3
+' entity      Entity      as Foo4
+' database    Database    as Foo5
+' collections Collections as Foo6
+' queue       Queue       as Foo7
+
+
+actor      "������"       as  Admin
+participant "UI" as  UI
+participant "Microservice Room" as  Model
+database    ROOM    as Room
+
+Admin -> UI : ���͡ "��¡����ͧ�ѡ"
+activate UI
+UI -> Model: getAllRooms()
+activate Model
+Model -> Room:SELECT roomNumber, roomPrice, status\nFROM Room
+activate Room
+Room --> Model: ��������ͧ�ѡ������
+deactivate Room
+Model --> UI:  �ʴ����ҧ��ͧ�ѡ������\n(Room Number, Monthly Rent, Status)
+deactivate Model
