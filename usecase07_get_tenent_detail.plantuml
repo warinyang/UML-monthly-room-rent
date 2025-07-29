@@ -1,0 +1,28 @@
+@startuml Use Case 07: การดูรายละเอียดผู้เช่า
+skinparam defaultFontName "TH Sarabun New"
+
+actor "ผู้ดูแล" as Admin
+participant "UI" as UI
+participant "Tenant Microservice" as MS
+database "Tenant DB" as DB
+
+
+
+Admin -> UI      : เลือก "ดูรายละเอียด" ผู้เช่า ${tenantId}
+activate UI
+
+UI -> MS         : getTenantById(tenantId)
+activate MS
+
+MS -> DB         : SELECT * FROM Tenant\nWHERE tenantId=${tenantId}
+activate DB
+
+DB --> MS        : return Tenant ${tenantId}
+deactivate DB
+
+MS --> UI        : แสดงรายละเอียดผู้เช่า\n- ชื่อ-นามสกุล\n- เบอร์โทรศัพท์\n- อีเมล\n- วันเกิด\n- บัตรประชาชน\n- ข้อมูลติดต่ออื่น ๆ
+
+deactivate MS
+deactivate UI
+
+@enduml
