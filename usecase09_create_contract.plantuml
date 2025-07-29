@@ -1,0 +1,83 @@
+@startuml
+skinparam defaultFontName "TH Sarabun New"
+
+actor "ผู้ดูแลระบบ" as Admin
+participant "UI" as UI
+participant "Tenant \nMicroservice" as TeMS
+participant "Room \nMicroservice" as RoMS
+
+participant "Contract \nMicroservice" as ConMS
+database "S3" as S3
+database "Contract DB" as DB
+
+Admin -> UI      : เลือก "สร้างสัญญาเช่า"
+activate UI
+
+
+UI -> TeMS         : GET getAllTenants()
+activate TeMS
+TeMS-->UI:  return all tenantsData 
+deactivate TeMS
+
+
+UI -> RoMS         : GET getAllRooms()
+activate RoMS
+RoMS --> UI        : return AllRooms
+deactivate RoMS
+
+
+UI -> UI         : แสดงฟอร์ม "สัญญาเช่า"
+alt ตรวจสอบรูปแบบข้อมูล
+Admin -> UI      : กรอกข้อมูลสัญญา\n วันที่เริ่มต้นสัญญา \n วันที่สิ้นสุดสัญญา \n จำนวนค่าเช่าวางล่วงหน้า
+
+alt ผู้ดูแลกรอก วันที่เริ่มต้นสัญญา
+UI -> UI         :  contractStartDate = วันที่เริ่มต้นสัญญา
+else ผู้ดูแล "ไม่ได้" กรอกวันที่เริ่มต้นสัญญา 
+UI -> UI         :  =contractStartDate = today()
+end
+
+alt ผู้ดูแลกรอกวันที่สิ้นสุดสัญญา
+UI -> UI         :  contractEndDate = วันที่สิ้นสุดสัญญา
+else ผู้ดูแล "ไม่ได้" กรอกวันที่เริ่มต้นสัญญา 
+UI -> UI         :  =contractEndDate = today()
+end
+
+UI -> UI  : ValiDateFormFormat()
+
+else รูปแบบข้อมูลผิดพลาด
+UI --> Admin: ข้อมูล ${data} ผิด format กรุณากรอกใหม่อีกครั้ง
+end
+Admin -> UI      : เลือก "อัปโหลดเอกสารอื่น ๆ"
+ref over UI, S3 : USE CASE: อัปโหลดเอกสารอื่น ๆ 
+
+Admin -> UI      : เลือก "บันทึกเอกสารสัญญากระดาษ"
+ref over UI, S3 : USE CASE: การอัปโหลดภาพสัญญากระดาษ
+
+Admin -> UI      : ยืนยันการบันทึกสัญญา
+
+
+UI -> ConMS         : POST /contracts/documents
+activate ConMS
+
+ConMS -> S3: uploadfileToS3()
+activate S3
+S3 --> ConMS: response URL path \n เอกสารสัญญากระดาษ, \n อัปโหลดเอกสารอื่น ๆ
+deactivate S3
+
+
+ConMS -> DB:  INSERT INTO Contract(...)\nVALUES(...)
+activate DB
+DB --> ConMS: created success return contractId
+deactivate DB
+ConMS --> UI        : "การทำสัญญาสำเร็จ"
+deactivate ConMS
+
+UI --> Admin    : แสดงข้อความ "การทำสัญญาสำเร็จ"
+UI -> UI         : กลับไปหน้าแสดงสัญญาเช่าทั้งหมด
+
+alt กด "ยกเลิก" ก่อนบันทึก
+    Admin -> UI      : กด "ยกเลิก"
+    UI -> UI         : กลับไปหน้าแสดงสัญญาเช่าทั้งหมด
+end
+
+@enduml
