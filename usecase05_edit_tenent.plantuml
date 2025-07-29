@@ -10,21 +10,21 @@ Admin -> UI    : เลือก "แก้ไข"
 UI -> UI       : แสดงฟอร์มแก้ไข (phone, email)
 
 alt ตรวจสอบรูปแบบข้อมูล
-Admin -> UI    : ปรับปรุงข้อมูล\nเบอร์โทรศัพท์\nอีเมล
-UI -> UI       : ตรวจสอบรูปแบบข้อมูล
+    Admin -> UI    : ปรับปรุงข้อมูล\nเบอร์โทรศัพท์\nอีเมล
+    UI -> UI       : ตรวจสอบรูปแบบข้อมูล
 else รูปแบบข้อมูลผิดพลาด
-UI --> Admin: ข้อมูล ${data} ผิด format กรุณากรอกใหม่อีกครั้ง
+    UI --> Admin: ข้อมูล ${data} ผิด format กรุณากรอกใหม่อีกครั้ง
 end
 
-    Admin -> UI        : คลิก "บันทึก"
-    UI -> MS           : PUT /tenants/${tenantId}\n{phone, email}
-    activate MS
-    MS -> DB           : UPDATE Tenant\nSET phone=X, email=X\nWHERE tenantId=${tenantId}
-    activate DB
-    DB --> MS          : 200 OK  updateSuccess
-    deactivate DB
-    MS --> UI          : แสดงข้อความ "บันทึกข้อมูลเรียบร้อยแล้ว"
-    deactivate MS
-    UI -> UI           : กลับไปหน้ารายการผู้เช่า
+Admin -> UI        : คลิก "บันทึก"
+UI -> MS           : PUT /tenants/${tenantId}\n{phone, email}
+activate MS
+MS -> DB           : UPDATE Tenant\nSET phone=X, email=X\nWHERE tenantId=${tenantId}
+activate DB
+DB --> MS          : 200 OK  updateSuccess
+deactivate DB
+MS --> UI          : แสดงข้อความ "บันทึกข้อมูลเรียบร้อยแล้ว"
+deactivate MS
+UI -> UI           : กลับไปหน้ารายการผู้เช่า
 
 @enduml
