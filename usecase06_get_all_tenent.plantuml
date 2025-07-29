@@ -1,0 +1,25 @@
+@startuml  Use Case 06: การดูรายการผู้เช่าทั้งหมด
+skinparam defaultFontName "TH Sarabun New"
+
+actor "ผู้ดูแล" as Admin
+participant "UI" as UI
+participant "Tenant Microservice" as MS
+database "Tenant DB" as DB
+
+Admin -> UI      : เลือกเมนู "รายการผู้เช่า"
+activate UI
+
+UI -> MS         : getAllTenants()
+activate MS
+
+MS -> DB         : SELECT name, phone\nFROM Tenant
+activate DB
+
+DB --> MS        : return all tenantsData 
+deactivate DB
+
+MS --> UI        : แสดงข้อผู้เช่าทั้งหมด\n- ชื่อ-นามสกุล\n- เบอร์โทรศัพท์
+deactivate MS
+deactivate UI
+
+@enduml
