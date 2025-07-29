@@ -12,24 +12,24 @@ activate UI
 
 UI --> UI       : แสดงฟอร์มลงทะเบียนผู้เช่า
 alt กรอกข้อมูล
-Admin -> UI: กรอกข้อมูล ชื่อ-นามสกุล, เบอร์โทรศัพท์, อีเมลล์ \n วันเกิด, บัตรประชาชน, ข้อมูลติดต่ออื่น ๆ 
-UI --> UI       : ตรวจสอบรูปแบบข้อมูล \nเบอร์โทรศัพท์ \nอีเมลล์ \nบัตรประชาชน
+    Admin -> UI: กรอกข้อมูล ชื่อ-นามสกุล, เบอร์โทรศัพท์, อีเมลล์ \n วันเกิด, บัตรประชาชน, ข้อมูลติดต่ออื่น ๆ
+    UI --> UI       : ตรวจสอบรูปแบบข้อมูล \nเบอร์โทรศัพท์ \nอีเมลล์ \nบัตรประชาชน
 else รูปแบบข้อมูลผิดพลาด
-UI --> Admin: ข้อมูล ${data} ผิด format กรุณากรอกใหม่อีกครั้ง
+    UI --> Admin: ข้อมูล ${data} ผิด format กรุณากรอกใหม่อีกครั้ง
 end
 Admin -> UI: เลือก "บันทึก"
 UI -> MS: POST /tenant\n{tenantData}
 
 alt ตรวจสอบข้อมูลผู้เช่า
-activate MS
-MS -> DB: INSERT INTO Tenant ( tanentThaiID, ... )\nVALUES(tanentThaiID, ...)
-activate DB
-DB --> MS: Https= 201, Created
-deactivate DB
+    activate MS
+    MS -> DB: INSERT INTO Tenant ( tanentThaiID, ... )\nVALUES(tanentThaiID, ...)
+    activate DB
+    DB --> MS: Https= 201, Created
+    deactivate DB
 
-MS --> UI: ลงทะเบียนผู้เช่าสำเร็จ
+    MS --> UI: ลงทะเบียนผู้เช่าสำเร็จ
 else insert tanentThaiID = DB tanentThaiID
-DB --> MS: Error Duplicate Tenent
-MS --> UI: ผู้เช่านี้มีอยู่ในระบบแล้ว
+    DB --> MS: Error Duplicate Tenent
+    MS --> UI: ผู้เช่านี้มีอยู่ในระบบแล้ว
 end
 @enduml

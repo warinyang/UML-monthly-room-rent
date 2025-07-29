@@ -10,7 +10,7 @@ database    ROOM    as Room
 
 Admin -> UI  : เลือก "ดูรายละเอียด" ห้อง ${roomId}
 activate UI
-UI -> MSROOM :findById(roomId) 
+UI -> MSROOM :findById(roomId)
 activate MSROOM
 MSROOM -> Room : SELECT * FROM Room \n WHERE roomId={roomId}
 activate Room
