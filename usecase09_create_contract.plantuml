@@ -58,7 +58,7 @@ Admin -> UI      : ยืนยันการบันทึกสัญญา
 UI -> ConMS         : createContractDocument
 activate ConMS
 
-ConMS -> S3: uploadfileToS3()
+ConMS -> S3: uploadfileToS3(เอกสาร)
 activate S3
 S3 --> ConMS: response URL path \n เอกสารสัญญากระดาษ, \n อัปโหลดเอกสารอื่น ๆ
 deactivate S3
