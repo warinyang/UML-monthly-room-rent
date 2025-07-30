@@ -7,20 +7,20 @@ participant "Tenant \nMicroservice" as TeMS
 participant "Room \nMicroservice" as RoMS
 
 participant "Contract \nMicroservice" as ConMS
-database "S3" as S3
+database "File Storage DB" as S3
 database "Contract DB" as DB
 
 Admin -> UI      : เลือก "สร้างสัญญาเช่า"
 activate UI
 
 
-UI -> TeMS         : GET getAllTenants()
+UI -> TeMS         :  getAllTenants()
 activate TeMS
 TeMS-->UI:  return all tenantsData 
 deactivate TeMS
 
 
-UI -> RoMS         : GET getAllRooms()
+UI -> RoMS         :  getAllRooms()
 activate RoMS
 RoMS --> UI        : return AllRooms
 deactivate RoMS
@@ -55,8 +55,7 @@ ref over UI, S3 : USE CASE: การอัปโหลดภาพสัญญ�
 
 Admin -> UI      : ยืนยันการบันทึกสัญญา
 
-
-UI -> ConMS         : POST /contracts/documents
+UI -> ConMS         : createContractDocument
 activate ConMS
 
 ConMS -> S3: uploadfileToS3()
