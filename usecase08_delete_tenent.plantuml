@@ -10,7 +10,7 @@ Admin -> UI      : เลือก "ลบผู้เช่า"
 UI -> UI         : แสดงกล่อง Confirm\n"ต้องการลบผู้เช่า?"
 alt ยืนยันลบ
     Admin -> UI      : คลิก "ยืนยัน"
-    UI -> MS         : DELETE /tenants/${tenantId}
+    UI -> MS         : deleteTenantById(tenantId)
     activate MS
     MS -> DB         : DELETE FROM Tenant\nWHERE tenantId=${tenantId}
     activate DB
