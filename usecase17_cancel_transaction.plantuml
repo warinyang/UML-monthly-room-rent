@@ -1,0 +1,34 @@
+@startuml Use Case 17: การยกเลิกรายรับ/รายจ่าย
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 17: การยกเลิกรายรับ/รายจ่าย
+
+actor "พนักงานบัญชี" as Accountant
+participant "UI" as UI
+participant "Transaction\nMicroservice" as AccMS
+database "Transaction DB" as TxDB
+
+Accountant -> UI : เลือก "จัดการรายการรายรับ/รายจ่าย"
+UI -> AccMS : getAllTransactions()
+AccMS -> TxDB : SELECT * FROM Transaction WHERE isCancelled = false
+TxDB --> AccMS : รายการทั้งหมด
+AccMS --> UI : แสดงตารางรายการ
+
+Accountant -> UI : คลิก "ยกเลิก" ที่รายการ
+UI -> UI : แสดงฟอร์ม"ยืนยันการยกเลิกรายการ?" 
+
+Accountant -> UI : กรอกเหตุผลในการยกเลิก และกดยืนยัน
+Accountant -> UI : กด "ยืนยัน" การยกเลิก
+UI -> AccMS : cancelTransaction(transactionID, reason)
+activate AccMS
+
+AccMS -> TxDB : UPDATE Transaction \n SET isCancelled = true, \n cancelReason = {reason}, \n cancelDate = TODAY \n WHERE transactionID = {id}
+TxDB --> AccMS : ยกเลิกสำเร็จ
+
+AccMS --> UI : แสดง "ยกเลิกรายการสำเร็จ"
+deactivate AccMS
+
+UI -> AccMS : getAllTransactions()
+AccMS -> TxDB : SELECT * FROM Transaction WHERE isCancelled = false
+TxDB --> AccMS : รายการอัปเดต
+AccMS --> UI : แสดงตารางรายการล่าสุด
+@enduml
