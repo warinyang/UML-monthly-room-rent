@@ -1,0 +1,51 @@
+
+@startuml Use Case 20: การบันทึกหน่วยค่าน้ำ/ค่าไฟฟ้า
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 20: การบันทึกหน่วยค่าน้ำ/ค่าไฟฟ้า
+
+actor "ผู้ดูแล" as Admin
+participant "UI" as UI
+participant "BillingService" as BillingSvc
+database "Meter" as MeterDB
+database "Contract" as ContractDB
+' database "Billing" as BillingDB
+
+Admin -> UI : เลือกเดือน/ปี ที่ต้องการกรอกหน่วย
+
+activate UI
+
+UI -> BillingSvc : เลือกห้องที่ถูกใช้งาน(month, year)
+BillingSvc -> ContractDB : เลือกห้องพักที่มีผู้เช่าใช้งานอยู่
+note right of BillingSvc
+SELECT roomID FROM Contract WHERE contractEndDate IS NULL
+OR contractEndDate > CURRENT_DATE
+end note
+BillingSvc -> MeterDB : ค้นหาเลขมิเตอร์ของเดือนก่อนหน้า
+note right of BillingSvc
+SELECT meterNumber utilityName FROM Meter 
+WHERE roomID IN (rooms) AND billingCycle = month-1
+end note
+BillingSvc --> UI : แสดงรายชื่อห้อง + ค่ามิเตอร์เดือนก่อน
+
+UI -> UI : แสดงหน้ากรอกเลขมิเตอร์เดือนปัจจุบัน
+
+Admin -> UI : กรอกเลขมิเตอร์ใหม่แต่ละห้อง
+UI -> UI : คำนวณหน่วยใช้ = เลขใหม่ - เลขเดิม
+
+alt หน่วยใหม่ < หน่วยเก่า
+    UI -> UI : แสดง "เลขมิเตอร์ต้องมากกว่าหรือเท่ากับเดือนก่อนหน้า"
+else หน่วยถูกต้อง
+    Admin -> UI : กดบันทึก
+    UI -> BillingSvc : saveUsageData(roomID, units, price, month, year)
+
+    BillingSvc -> MeterDB: บันทึกเลขมิเตอร์ของรอบบิลใหม่ \n INSERT INTO MeterDB (...) 
+
+    ' BillingSvc -> BillingDB : INSERT INTO Billing (...)  เดี่ยวจะไปไว้ตอนเขียนบิล 
+    MeterDB --> BillingSvc : Success
+    
+    
+    BillingSvc --> UI : แสดงข้อความ "บันทึกสำเร็จ"
+    deactivate UI
+
+end
+@enduml
