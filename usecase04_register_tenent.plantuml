@@ -18,7 +18,7 @@ else รูปแบบข้อมูลผิดพลาด
     UI --> Admin: ข้อมูล ${data} ผิด format กรุณากรอกใหม่อีกครั้ง
 end
 Admin -> UI: เลือก "บันทึก"
-UI -> MS: POST /tenant\n{tenantData}
+UI -> MS: createdTenant()
 
 alt ตรวจสอบข้อมูลผู้เช่า
     activate MS
