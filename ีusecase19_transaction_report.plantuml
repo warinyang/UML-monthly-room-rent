@@ -1,0 +1,27 @@
+@startuml Use Case 19: การออกรายงานรายรับ/รายจ่าย
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 19: การออกรายงานรายรับ/รายจ่าย
+
+actor "พนักงานบัญชี" as Accountant
+participant "UI" as UI
+participant "Accounting\nMicroservice" as AccMS
+database "Transaction" as TxDB
+
+Accountant -> UI : เลือก "จัดการรายการรายรับ/รายจ่าย"
+UI -> UI : แสดงเมนูตัวเลือก
+
+Accountant -> UI : เลือก "ดูรายงานสรุปบัญชี"
+UI -> AccMS : getSummaryReport()
+activate AccMS
+
+AccMS -> TxDB :  SELECT transactionType, transactionCatagory, amount \n FROM Transaction \n WHERE isCancelled = false
+
+TxDB --> AccMS : ส่งข้อมูลรายการรายรับ/รายจ่าย
+
+' AccMS -> AccMS : ประมวลผลสรุปยอดรายรับ รายจ่าย แยกตามหมวดหมู่
+
+AccMS --> UI : ส่งข้อมูลรายงานสรุปบัญชี
+deactivate AccMS
+
+' UI -> UI : แสดงกราฟ/ตารางรายงานให้พนักงานบัญชีดู
+@enduml
