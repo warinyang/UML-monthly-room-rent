@@ -1,0 +1,38 @@
+@startuml Use Case 15: การแก้ไขข้อมูลสัญญา
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 15: การแก้ไขข้อมูลสัญญา
+
+actor "ผู้ดูแลระบบ" as Admin
+participant "UI" as UI
+participant "Contract\nMicroservice" as ConMS
+database "Room + Tenant + Contract DB" as joinDB
+database "Contract DB" as ContractDB
+
+note over UI, joinDB
+USE CASE ที่เกี่ยวข้อง: การดูรายละเอียดผู้เช่า
+end note
+
+Admin -> UI : เลือก "แก้ไขข้อมูลสัญญา"
+activate UI
+
+UI --> UI : แสดงฟอร์มแก้ไขสัญญา (สิ้นสุดสัญญา)
+
+Admin -> UI : แก้ไข "วันที่สิ้นสุดสัญญา"
+UI -> UI : validateEndDate()
+
+Admin -> UI : คลิก "บันทึก"
+UI -> ConMS : editContractById(contractId)
+activate ConMS
+
+ConMS -> ContractDB : UPDATE Contract\nSET endDate = {endDate}\nWHERE contractId = {contractId}
+activate ContractDB
+
+ContractDB --> ConMS : แก้ไขข้อมูลสัญญาสำเร็จ
+deactivate ContractDB
+
+ConMS --> UI : แสดงข้อความ "แก้ไขข้อมูลสัญญาสำเร็จ"
+deactivate ConMS
+
+UI -> UI : กลับไปหน้า "รายละเอียดสัญญา"
+
+@enduml
