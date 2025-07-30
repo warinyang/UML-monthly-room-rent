@@ -1,0 +1,39 @@
+@startuml Use Case 18: การบันทึกการชำระเงินออนไลน์อัตโนมัติ
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 18: การบันทึกการชำระเงินออนไลน์อัตโนมัติ
+
+actor "ระบบรับชำระเงิน" as PaymentGateway
+participant "Payment \nMicroservice" as pyMS
+database "Payment" as PaymentDB
+database "Transaction" as TxDB
+
+PaymentGateway -> pyMS : ส่งข้อมูลการชำระเงิน (amount, method, refId, billingID)
+activate pyMS
+
+pyMS -> PaymentDB : ตรวจสอบ refId ซ้ำ (SELECT * FROM payment WHERE refId = {refId})
+PaymentDB --> pyMS : ไม่พบ (refId ไม่ซ้ำ)
+
+alt refId ไม่ซ้ำ
+    pyMS -> TxDB : เพิ่ม Transaction (type=true, หมวด='รายรับ', amount, date)
+    note right of TxDB
+    INSERT INTO Transaction (transactionType, transactionCatagory, amount, trasaction)
+    VALUES (true, 'รายรับจากผู้เช่า', {amount}, CURRENT_DATE)
+    end note
+    pyMS -> PaymentDB : เพิ่ม Payment (billingID, amount, method, status=1, refId)
+    
+    note right of pyMS
+    INSERT INTO payment \n
+    (billingID, paymentType, amount, method, paymentstatus, refId) \n
+    VALUES (..., ..., ..., ..., 1, {refId})
+    end note
+    
+    pyMS --> PaymentGateway : ชำระเงินสำเร็จ
+    
+else refId ซ้ำแล้ว
+    pyMS --> PaymentGateway : ปฏิเสธการบันทึก (refId ซ้ำ)
+end
+
+deactivate pyMS
+@enduml
+
+
