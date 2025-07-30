@@ -1,0 +1,25 @@
+@startuml use case 13 ดูรายละเอียดสัญญา
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 13: ดูรายละเอียดสัญญา
+
+actor "ผู้ดูแลระบบ" as Admin
+participant "UI" as UI
+participant "Contract \nMicroservice" as ConMS
+database "DB JOIN\nRoom Tenant Contract" as joinDB
+
+Admin -> UI: เลือก "แสดงรายการสัญญา"
+UI -> ConMS: GetContractById(id)
+ConMS -> joinDB: SELECT * \nFROM RoomDB \nJOIN TenantDB \nJOIN ContractDB \nWHERE id = ?
+
+activate joinDB
+joinDB --> ConMS: Response Contract Detail
+deactivate joinDB
+
+alt contractEndDate == NULL OR contractStartDate > TODAY
+    ConMS -> ConMS: สถานะสัญญา = "ยังคงอยู่ในสัญญา"
+else contractStartDate < TODAY
+    ConMS -> ConMS: สถานะสัญญา = "สัญญาสิ้นสุด"
+end
+
+ConMS --> UI: แสดงรายละเอียดสัญญา
+@enduml

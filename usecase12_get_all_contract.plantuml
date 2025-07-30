@@ -1,0 +1,26 @@
+@startuml Use Case 12: แสดงรายการสัญญาทั้งหมด
+title Use Case 12: แสดงรายการสัญญาทั้งหมด
+skinparam defaultFontName "TH Sarabun New"
+
+actor "ผู้ดูแลระบบ" as Admin
+participant "UI" as UI
+participant "Contract\nMicroservice" as ConMS
+database "DB JOIN\nRoom Tenent Contract" as joinDB
+
+Admin -> UI: เลือก "แสดงรายการสัญญา"
+UI -> ConMS: GetAllContract()
+
+ConMS -> joinDB: SELECT roomNumber, tenantName,\ncontractStartDate, contractEndDate\nFROM RoomDB JOIN TenantDB JOIN ContractDB
+activate joinDB
+joinDB --> ConMS: ข้อมูลสัญญา
+deactivate joinDB
+
+alt contractEndDate == NULL OR contractStartDate > TODAY
+    ConMS -> ConMS: สถานะสัญญา = "ยังคงอยู่ในสัญญา"
+else contractStartDate < TODAY
+    ConMS -> ConMS: สถานะสัญญา = "สัญญาสิ้นสุด"
+end
+
+ConMS --> UI: แสดงรายการสัญญา\n(id, หมายเลขห้อง, ชื่อ-นามสกุล,\nวันที่เริ่ม, วันที่สิ้นสุด, สถานะ)
+
+@enduml
