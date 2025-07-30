@@ -1,0 +1,46 @@
+@startuml Use Case 16: การบันทึกรายรับ/รายจ่าย
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 16: การบันทึกรายรับ/รายจ่าย
+
+actor "พนักงานบัญชี" as Accountant
+participant "UI" as UI
+participant "Transactions\nMicroservice" as TxnMS
+database "File Storage DB" as FileDB
+database "Transactions DB" as TxnDB
+
+
+Accountant -> UI : เลือก "จัดการรายการรายรับ/รายจ่าย"
+UI -> UI : แสดงหน้ารายการายรับ/รายจ่าย
+
+Accountant -> UI : เลือก "บันทึกรายรับ/รายจ่าย"
+UI -> UI : แสดงฟอร์มเพิ่มรายการใหม่
+
+Accountant -> UI : กรอกข้อมูล (วันที่, จำนวนเงิน, คำอธิบาย, หมวดหมู่, ประเภท)
+alt แนบเอกสารประกอบ
+    alt ประเภทไฟล์ถูกต้อง
+        UI -> UI : แสดงไฟล์เอกสารประกอบ
+        Accountant -> UI: ยืนยันการเพิ่มเอกสารประกอบ
+    else ไฟล์ไม่รองรับ
+        UI->UI : แสดงข้อความ "กรุณาอัปโหลดไฟล์อีกครั้ง"
+    end
+end
+
+Accountant -> UI : คลิก "บันทึก"
+UI -> TxnMS : createTransaction(ข้อมูล, เอกสารประกอบ)
+activate TxnMS
+TxnMS -> FileDB: uploadfileToS3(เอกสารประกอบ)
+activate FileDB
+FileDB --> TxnMS: response URL path เอกสารประกอบ
+deactivate FileDB
+
+
+
+TxnMS -> TxnDB : INSERT INTO transaction_table \n(date, amount, description, category, type, file_url)
+activate TxnDB
+TxnDB --> TxnMS : บันทึกสำเร็จ
+deactivate TxnDB
+TxnMS --> UI : สถานะสำเร็จ + ข้อมูลรายการใหม่
+deactivate TxnMS
+
+UI -> UI : แสดงหน้ารายการ รายรับ/รายจ่าย
+@enduml
