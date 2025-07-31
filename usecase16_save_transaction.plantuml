@@ -4,7 +4,7 @@ title Use Case 16: การบันทึกรายรับ/รายจ่
 
 actor "พนักงานบัญชี" as Accountant
 participant "UI" as UI
-participant "Transactions\nMicroservice" as TxnMS
+participant "Transactions \nService" as TxnMS
 database "File Storage DB" as FileDB
 database "Transactions DB" as TxnDB
 
