@@ -4,7 +4,7 @@ title Use Case 19: การออกรายงานรายรับ/รา
 
 actor "พนักงานบัญชี" as Accountant
 participant "UI" as UI
-participant "Accounting\nMicroservice" as AccMS
+participant "Accounting\nService" as AccMS
 database "Transaction" as TxDB
 
 Accountant -> UI : เลือก "จัดการรายการรายรับ/รายจ่าย"
@@ -14,7 +14,13 @@ Accountant -> UI : เลือก "ดูรายงานสรุปบั�
 UI -> AccMS : getSummaryReport()
 activate AccMS
 
-AccMS -> TxDB :  SELECT transactionType, transactionCatagory, amount \n FROM Transaction \n WHERE isCancelled = false
+note right of AccMS
+SELECT transactionType,
+transactionCatagory,amount
+FROM Transaction
+WHERE isCancelled = false
+end note
+AccMS -> TxDB :  เลือกรายการ
 
 TxDB --> AccMS : ส่งข้อมูลรายการรายรับ/รายจ่าย
 

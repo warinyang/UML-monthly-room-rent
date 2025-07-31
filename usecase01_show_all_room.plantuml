@@ -11,12 +11,14 @@ Admin -> UI : เลือก "รายการห้องพัก"
 activate UI
 UI -> Model: getAllRooms()
 activate Model
-Model -> Room:ค้นหาห้องพักในฐานข้อมูล
+
 note right of Model
     SELECT roomNumber,
     roomPrice, status
     FROM Room
 end note
+Model -> Room:ค้นหาห้องพักในฐานข้อมูล
+
 activate Room
 Room --> Model: ข้อมูลห้องพักทั้งหมด
 deactivate Room

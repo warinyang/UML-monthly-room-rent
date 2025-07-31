@@ -19,13 +19,13 @@ Admin -> UI      : เลือก "บันทึก"
 UI -> MSROOM    : updateRoom(roomId, newPrice, newStatus)
 activate MSROOM
 
-MSROOM -> RoomDB: บันทึกข้อมูลใหม่
+
 note right of  MSROOM
 UPDATE Room
 SET roomPrice=newPrice, status=newStatus
 WHERE roomId=${roomId}
 end note
-
+MSROOM -> RoomDB: บันทึกข้อมูลใหม่
 activate RoomDB
 
 

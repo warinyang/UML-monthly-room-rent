@@ -1,12 +1,12 @@
 @startuml
 skinparam defaultFontName "TH Sarabun New"
-
+title Use Case 09: การสร้างสัญญาเช่า
 actor "ผู้ดูแลระบบ" as Admin
 participant "UI" as UI
-participant "Tenant \nMicroservice" as TeMS
-participant "Room \nMicroservice" as RoMS
+participant "Tenant \nService" as TeMS
+participant "Room \nService" as RoMS
 
-participant "Contract \nMicroservice" as ConMS
+participant "Contract \nService" as ConMS
 database "File Storage DB" as S3
 database "Contract DB" as DB
 
@@ -63,10 +63,13 @@ activate S3
 S3 --> ConMS: response URL path \n เอกสารสัญญากระดาษ, \n อัปโหลดเอกสารอื่น ๆ
 deactivate S3
 
-
-ConMS -> DB:  INSERT INTO Contract(...)\nVALUES(...)
+note right of ConMS
+INSERT INTO Contract(...)
+VALUES(...)
+end note 
+ConMS -> DB:  บันทึกรายการสัญญาลงในฐานข้อมูล
 activate DB
-DB --> ConMS: created success return contractId
+DB --> ConMS: บันทึกสำเร็จ
 deactivate DB
 ConMS --> UI        : "การทำสัญญาสำเร็จ"
 deactivate ConMS

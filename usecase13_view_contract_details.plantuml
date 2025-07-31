@@ -4,12 +4,18 @@ title Use Case 13: ดูรายละเอียดสัญญา
 
 actor "ผู้ดูแลระบบ" as Admin
 participant "UI" as UI
-participant "Contract \nMicroservice" as ConMS
+participant "Contract \nService" as ConMS
 database "DB JOIN\nRoom Tenant Contract" as joinDB
 
 Admin -> UI: เลือก "แสดงรายการสัญญา"
 UI -> ConMS: GetContractById(id)
-ConMS -> joinDB: SELECT * \nFROM RoomDB \nJOIN TenantDB \nJOIN ContractDB \nWHERE id = ?
+note right of ConMS
+SELECT * FROM RoomDB 
+JOIN TenantDB 
+JOIN ContractDB 
+WHERE id = ?
+end note
+ConMS -> joinDB: ค้นหาสัญญาจากฐานข้อมูล
 
 activate joinDB
 joinDB --> ConMS: Response Contract Detail

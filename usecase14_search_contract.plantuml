@@ -1,21 +1,24 @@
 @startuml use case 14 การค้นหาสัญญา
 skinparam defaultFontName "TH Sarabun New"
-
+title Use Case 14: การค้นหาสัญญา
 actor "ผู้ดูแลระบบ" as Admin
 participant "UI" as UI
-participant "Contract \nMicroservice" as ConMS
+participant "Contract \nService" as ConMS
 database "Room + Tenant + Contract DB" as joinDB
 
 Admin -> UI: เลือก "ค้นหารายการสัญญา"
 UI -> ConMS: GetContractById(id)
 activate ConMS
 
-ConMS -> joinDB: 
-    SELECT * 
-    FROM RoomDB 
-    JOIN TenantDB 
-    JOIN ContractDB 
-    WHERE id = ?
+
+note right of ConMS
+SELECT * 
+FROM RoomDB 
+JOIN TenantDB 
+JOIN ContractDB 
+WHERE id = ?
+end note
+ConMS -> joinDB: ค้นหาสัญญาจากฐานข้อมูล
 
 activate joinDB
 joinDB --> ConMS: Response Contract Data by id 

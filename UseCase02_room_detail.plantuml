@@ -10,13 +10,11 @@ Admin -> UI  : เลือก "ดูรายละเอียด" ห้อ�
 activate UI
 UI -> MSROOM :findById(roomId)
 activate MSROOM
-MSROOM -> Room : ค้นหารายละเอียดห้องพักในฐานข้อมูล
-
 note right of MSROOM
 SELECT * FROM Room  WHERE 
 roomId={roomId}
 end note
-
+MSROOM -> Room : ค้นหารายละเอียดห้องพักในฐานข้อมูล
 activate Room
 Room --> MSROOM: แสดงรายละเอียดห้องพัก ${roomId}
 deactivate Room

@@ -1,9 +1,9 @@
 @startuml
 skinparam defaultFontName "TH Sarabun New"
-
+title Use Case 05: แก้ไขข้อมูลผู้เช่า
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI
-participant "Tenant Microservice" as MS
+participant "Tenant Service" as MS
 database "Tenant DB" as DB
 
 Admin -> UI    : เลือก "แก้ไข"
@@ -17,9 +17,15 @@ else รูปแบบข้อมูลผิดพลาด
 end
 
 Admin -> UI        : คลิก "บันทึก"
-UI -> MS           : PUT /tenants/${tenantId}\n{phone, email}
+
+UI -> MS           : updateTenent()
 activate MS
-MS -> DB           : UPDATE Tenant\nSET phone=X, email=X\nWHERE tenantId=${tenantId}
+note right of MS
+UPDATE Tenant 
+SET phone=X, email=X
+WHERE tenantId=${tenantId}
+end note
+MS -> DB           : บันทึกการแก้ไขผู้เช่าลงในฐานข้อมูล
 activate DB
 DB --> MS          : 200 OK  updateSuccess
 deactivate DB

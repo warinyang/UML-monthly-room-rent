@@ -34,8 +34,11 @@ FileDB --> TxnMS: response URL path เอกสารประกอบ
 deactivate FileDB
 
 
-
-TxnMS -> TxnDB : INSERT INTO transaction_table \n(date, amount, description, category, type, file_url)
+note right of TxnMS
+ INSERT INTO transaction_table 
+ (date, amount, description, category, type, file_url)
+end note
+TxnMS -> TxnDB : เพิ่มรายการ รายรับ/รายจ่าย
 activate TxnDB
 TxnDB --> TxnMS : บันทึกสำเร็จ
 deactivate TxnDB

@@ -24,7 +24,13 @@ Admin -> UI : คลิก "บันทึก"
 UI -> ConMS : editContractById(contractId)
 activate ConMS
 
-ConMS -> ContractDB : UPDATE Contract\nSET endDate = {endDate}\nWHERE contractId = {contractId}
+note right of ConMS
+ UPDATE Contract
+ SET endDate = {endDate}
+ WHERE contractId = {contractId}
+end note
+
+ConMS -> ContractDB :บันทึกข้อมูลสัญญา
 activate ContractDB
 
 ContractDB --> ConMS : แก้ไขข้อมูลสัญญาสำเร็จ

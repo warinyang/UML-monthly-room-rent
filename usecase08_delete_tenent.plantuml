@@ -1,9 +1,9 @@
 @startuml ลบผู้เช่า
 skinparam defaultFontName "TH Sarabun New"
-
+Title Use Case 08: ลบผู้เช่า
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI
-participant "Tenant Microservice" as MS
+participant "Tenant Service" as MS
 database "Tenant DB" as DB
 
 Admin -> UI      : เลือก "ลบผู้เช่า"
@@ -12,9 +12,15 @@ alt ยืนยันลบ
     Admin -> UI      : คลิก "ยืนยัน"
     UI -> MS         : deleteTenantById(tenantId)
     activate MS
-    MS -> DB         : DELETE FROM Tenant\nWHERE tenantId=${tenantId}
+
+    note right of MS
+    DELETE FROM Tenant
+    WHERE tenantId=${tenantId}
+    end note
+
+    MS -> DB         : ลบรายการผู้เช่าออกจากฐานข้อมูล
     activate DB
-    DB --> MS        : deleteSuccess
+    DB --> MS        :ลบสำเร็จ
     deactivate DB
     MS --> UI        : แสดงข้อความ "ลบข้อมูลผู้เช่าเรียบร้อยแล้ว"
     deactivate MS

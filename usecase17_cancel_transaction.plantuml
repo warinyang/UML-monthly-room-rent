@@ -21,14 +21,25 @@ Accountant -> UI : กด "ยืนยัน" การยกเลิก
 UI -> AccMS : cancelTransaction(transactionID, reason)
 activate AccMS
 
-AccMS -> TxDB : UPDATE Transaction \n SET isCancelled = true, \n cancelReason = {reason}, \n cancelDate = TODAY \n WHERE transactionID = {id}
+note right of AccMS
+UPDATE Transaction
+SET isCancelled = true,
+cancelReason = {reason},
+cancelDate = TODAY
+WHERE transactionID = {id}
+end note
+AccMS -> TxDB : ปรับสถานะของรายการไปเป็นยกเลิก
 TxDB --> AccMS : ยกเลิกสำเร็จ
 
 AccMS --> UI : แสดง "ยกเลิกรายการสำเร็จ"
 deactivate AccMS
 
 UI -> AccMS : getAllTransactions()
-AccMS -> TxDB : SELECT * FROM Transaction WHERE isCancelled = false
+note right of AccMS
+SELECT * FROM Transaction WHERE 
+isCancelled = false
+end note
+AccMS -> TxDB : เลือกรายการจากฐานข้อมูล
 TxDB --> AccMS : รายการอัปเดต
 AccMS --> UI : แสดงตารางรายการล่าสุด
 @enduml

@@ -4,13 +4,18 @@ skinparam defaultFontName "TH Sarabun New"
 
 actor "ผู้ดูแลระบบ" as Admin
 participant "UI" as UI
-participant "Contract\nMicroservice" as ConMS
+participant "Contract\Service" as ConMS
 database "DB JOIN\nRoom Tenent Contract" as joinDB
 
 Admin -> UI: เลือก "แสดงรายการสัญญา"
 UI -> ConMS: GetAllContract()
 
-ConMS -> joinDB: SELECT roomNumber, tenantName,\ncontractStartDate, contractEndDate\nFROM RoomDB JOIN TenantDB JOIN ContractDB
+note right of ConMS
+SELECT roomNumber, tenantName,
+contractStartDate, contractEndDate
+FROM RoomDB JOIN TenantDB JOIN ContractDB
+end note
+ConMS -> joinDB: เลือกสัญญาทั้งหมดจากฐานข้อมูล
 activate joinDB
 joinDB --> ConMS: ข้อมูลสัญญา
 deactivate joinDB

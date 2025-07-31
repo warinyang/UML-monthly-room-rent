@@ -1,9 +1,9 @@
 @startuml
 skinparam defaultFontName "TH Sarabun New"
-
+title Use Case 04: ลงทะเบียนผู้เช่า
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI
-participant "Tenant Microservice" as MS
+participant "Tenant Service" as MS
 database "Tenant DB" as DB
 
 
@@ -22,13 +22,18 @@ UI -> MS: createdTenant()
 
 alt ตรวจสอบข้อมูลผู้เช่า
     activate MS
-    MS -> DB: INSERT INTO Tenant ( tanentThaiID, ... )\nVALUES(tanentThaiID, ...)
+
+    note right of MS
+    INSERT INTO Tenant ( tanentThaiID, ... )
+    VALUES(tanentThaiID, ...)
+    end note
+    MS -> DB: เพิ่มข้อมูลผู้เช่าลงในฐานข้อมูล
     activate DB
-    DB --> MS: Https= 201, Created
+    DB --> MS: บันทึกการเพิ่มสำเสร็จ (201, created)
     deactivate DB
 
     MS --> UI: ลงทะเบียนผู้เช่าสำเร็จ
-else insert tanentThaiID = DB tanentThaiID
+else ถ้าขอมูลของผู้เช่ามีอยู่ในระบบ insert tanentThaiID = DB tanentThaiID
     DB --> MS: Error Duplicate Tenent
     MS --> UI: ผู้เช่านี้มีอยู่ในระบบแล้ว
 end
