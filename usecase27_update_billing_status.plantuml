@@ -1,0 +1,79 @@
+@startuml Use Case 27: การอัปเดตสถานะใบแจ้งหนี้
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 27: การอัปเดตสถานะใบแจ้งหนี้
+
+actor "ผู้ดูแล" as Admin
+participant "UI" as UI
+participant "BillingService" as BillingSvc
+participant FileStorage
+database "Billing" as BillingDB
+database "Transactions DB" as TxnDB
+database "Payment" as PaymentDB
+
+Admin -> UI : เลือกเมนู "ประวัติใบแจ้งหนี้"
+UI -> BillingSvc : getInvoiceHistory(month)
+
+BillingSvc -> BillingDB : ค้นหาใบแจ้งหนี้ย้อนหลัง
+note right of BillingSvc
+SELECT * FROM Billing
+WHERE billingCycle = month
+end note
+
+alt พบข้อมูล
+    BillingDB --> BillingSvc : ส่งรายการใบแจ้งหนี้
+    BillingSvc --> UI : แสดงรายการใบแจ้งหนี้ย้อนหลัง
+
+    Admin -> UI : เลือกรายการใบแจ้งหนี้
+    UI -> UI : แสดงรายละเอียด + ปุ่ม "อัปเดตสถานะ"
+
+    Admin -> UI : เลือก "อัปเดตสถานะเป็นชำระแล้ว"
+     UI -> UI : แสดงหน้า "อัปโหลดหลักฐาน"
+    Admin -> UI : แนบหลักฐาน
+   
+
+
+    alt แนบเอกสารประกอบ
+    alt ประเภทไฟล์ถูกต้อง
+        UI -> UI : แสดงไฟล์เอกสารประกอบ
+        Admin -> UI: ยืนยันการเพิ่มเอกสารประกอบ
+    else ไฟล์ไม่รองรับ
+        UI->UI : แสดงข้อความ "กรุณาอัปโหลดไฟล์อีกครั้ง"
+    end
+    end
+
+    UI -> FileStorage : อัปโหลดหลักฐานการชำระเงิน
+    FileStorage --> UI : ส่งกลับ URL หลักฐาน
+
+
+    UI -> BillingSvc : อัปเดตสถานะการชำระเงิน \n updateInvoiceStatus(invoiceID, "PAID", method, fileUrl)
+    BillingSvc -> PaymentDB : อัปเดตสถานะใบแจ้งหนี้
+    note right of BillingSvc
+    UPDATE Payment SET
+      status = 'PAID',
+      paymentDate = CURRENT_TIMESTAMP,
+      paymentMethod = ?,
+    WHERE billingID = ?
+    end note
+
+BillingSvc -> TxnDB : เพื่มในรายการรับ/จ่าย
+ note right of BillingSvc
+    INSERT INTO transaction_table 
+    (date, amount, description, category, 
+    type, file_url)
+ end note
+
+
+TxnDB --> BillingSvc : บันทึกสำเร็จ
+ PaymentDB --> BillingSvc : บันทึกสำเร็จ
+BillingSvc --> UI : สถานะสำเร็จ + ข้อมูลรายการใหม่
+deactivate BillingSvc
+    
+
+   
+    BillingSvc --> UI : แสดง "อัปเดตสถานะเรียบร้อยแล้ว"
+
+else ไม่พบข้อมูล
+    BillingSvc --> UI : แสดงข้อความ "ไม่พบข้อมูลใบแจ้งหนี้ย้อนหลัง"
+end
+
+@enduml
