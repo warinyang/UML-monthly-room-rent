@@ -1,0 +1,15 @@
+@startuml Use Case 28: ออกรายงานการใช้บริการห้องเช่ารายเดือน
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 28: ออกรายงานการใช้บริการห้องเช่ารายเดือน
+
+actor "เจ้าของห้องพัก" as Owner
+participant "UI" as UI
+participant "ReportService" as ReportSvc
+
+Owner -> UI : เลือกรายงาน "การใช้บริการห้องเช่ารายเดือน"
+UI -> UI : แสดงตัวเลือกเงื่อนไข (เดือน/ปี หรือช่วงเวลา)
+
+UI -> ReportSvc : ดึงข้อมูล Billing ตามช่วงเวลา
+ReportSvc --> UI: แสดงรายงาน
+
+@enduml
