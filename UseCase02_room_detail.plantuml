@@ -3,7 +3,7 @@ skinparam defaultFontName "TH Sarabun New"
 title Use Case 02: ดูรายละเอียดห้องพัก
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI
-participant "Room Service" as  MSROOM
+participant "RoomService" as  MSROOM
 database    ROOM    as Room
 
 Admin -> UI  : เลือก "ดูรายละเอียด" ห้อง ${roomId}
