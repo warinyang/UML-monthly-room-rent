@@ -1,0 +1,26 @@
+@startuml Use Case 26: การดูประวัติใบแจ้งหนี้ย้อนหลัง
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 26: การดูประวัติใบแจ้งหนี้ย้อนหลัง
+
+actor "ผู้ดูแล" as Admin
+participant "UI" as UI
+participant "BillingService" as BillingSvc
+database "Billing" as BillingDB
+
+Admin -> UI : เลือกเมนู "ประวัติใบแจ้งหนี้"
+UI -> BillingSvc : getInvoiceHistory(month)
+
+BillingSvc -> BillingDB : ค้นหาใบแจ้งหนี้ย้อนหลัง
+note right of BillingSvc
+SELECT * FROM Billing
+WHERE billingCycle = month
+end note
+alt พบข้อมูล
+
+    BillingDB --> BillingSvc : ส่งรายการใบแจ้งหนี้
+    BillingSvc --> UI : แสดงรายการใบแจ้งหนี้ย้อนหลัง
+
+else ไม่พบข้อมูล
+    BillingSvc --> UI : แสดงข้อความ "ไม่พบข้อมูลใบแจ้งหนี้ย้อนหลัง"
+end
+@enduml
