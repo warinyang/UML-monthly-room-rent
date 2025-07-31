@@ -16,14 +16,18 @@ PaymentDB --> pyMS : ไม่พบ (refId ไม่ซ้ำ)
 alt refId ไม่ซ้ำ
     pyMS -> TxDB : เพิ่ม Transaction (type=true, หมวด='รายรับ', amount, date)
     note right of TxDB
-    INSERT INTO Transaction (transactionType, transactionCatagory, amount, trasaction)
-    VALUES (true, 'รายรับจากผู้เช่า', {amount}, CURRENT_DATE)
+    INSERT INTO Transaction 
+    (transactionType, transactionCatagory, 
+    amount, trasaction)
+    VALUES (true, 'รายรับจากผู้เช่า', 
+    {amount}, CURRENT_DATE)
     end note
     pyMS -> PaymentDB : เพิ่ม Payment (billingID, amount, method, status=1, refId)
     
     note right of pyMS
     INSERT INTO payment \n
-    (billingID, paymentType, amount, method, paymentstatus, refId) \n
+    (billingID, paymentType, amount,
+    method, paymentstatus, refId) \n
     VALUES (..., ..., ..., ..., 1, {refId})
     end note
     
