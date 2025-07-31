@@ -1,0 +1,38 @@
+@startuml Use Case 24: การสมัครรับใบแจ้งหนี้ 
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 24: การสมัครรับใบแจ้งหนี้
+
+actor "ผู้เช่า" as Tenant
+participant "LINE Bot / App" as App
+participant "ContractService" as ContractSvc
+
+
+database "Contract" as ContractDB
+
+Tenant -> App : เชื่อมต่อบัญชี LINE กับระบบ
+App -> App : ดึง LINE ID ของผู้เช่า
+
+Tenant -> App : เลือก "สมัครรับใบแจ้งหนี้"
+App -> Tenant : แบบฟอร์ม (ชื่อ–นามสกุล, หมายเลขห้อง, เบอร์โทรศัพท์)
+
+Tenant -> App : กรอกข้อมูลและยืนยันสมัคร
+App -> App : ส่งรหัส OTP ไปยังเบอร์โทร
+App --> App : ส่ง OTP สำเร็จ
+
+Tenant -> App : กรอกรหัส OTP
+
+App -> App : ตรวจสอบรหัส OTP
+App --> App : ยืนยันสำเร็จ
+
+App -> ContractSvc : ตรวจสอบข้อมูลผู้เช่า
+ContractSvc -> ContractDB : ค้นหาผู้เช่าในฐานข้อมูล
+note over ContractDB
+SELECT * FROM Contract \n
+WHERE roomID = ? AND fullName = ?
+ContractDB --> ContractSvc : ตรงกับข้อมูลผู้เช่า
+end note
+
+ContractDB --> ContractSvc : เจอข้อมูลตรงกัน 
+ContractSvc --> App : สมัครสำเร็จ
+App -> Tenant : แสดง "สมัครรับใบแจ้งหนี้เรียบร้อยแล้ว"
+@enduml
