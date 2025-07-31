@@ -1,0 +1,84 @@
+@startuml Use Case 21: เพิ่มรายการคืน/เรียกเก็บเพิ่มเติม
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 21: เพิ่มรายการคืน/เรียกเก็บเพิ่มเติม
+
+actor "ผู้ดูแล" as Admin
+participant "UI" as UI
+participant "BillingService" as BillingSvc
+database "Contract" as ContractDB
+database "Billing" as BillingDB
+
+Admin -> UI : เลือกเดือน/ปี ที่ต้องการเพิ่มรายการ
+UI -> UI : แสดงเมนู "เพิ่มรายการเรียกเก็บ/คืนเงิน"
+
+loop "เพิ่มรายการคืนเงิน" หรือ "เรียกเก็บเพิ่มเติม" สามารถกดเพิ่มได้เรื่อย ๆ 
+    Admin -> UI : เลือก "เพิ่มรายการคืนเงิน" หรือ "เรียกเก็บเพิ่มเติม"
+    UI -> UI : แสดงฟอร์มกรอกรายการ (ชื่อรายการ, หน่วย, ราคา)
+    Admin -> UI : กรอกข้อมูล และกดยืนยัน
+    UI -> BillingSvc : validateData(itemName, unit, price)
+
+    note over BillingSvc
+    คำนวณจำนวนเงินทั้งหมด
+    end note
+
+    alt รายการคืนเงิน
+        BillingSvc -> BillingSvc: + (unit × price)
+    else เรียกเก็บเพิ่มเติม
+        BillingSvc -> BillingSvc: - (unit × price)
+    end
+end
+
+Admin -> UI : เลือก "ยืนยันการเพิ่มรายการ"
+UI -> UI : แสดงวิธีการเพิ่มรายการ
+
+alt เพิ่มรายการในทุกห้อง
+    Admin -> UI: เลือก เพิ่มรายการในทุกห้อง
+    UI -> BillingSvc : saveItemToAllRooms(month, year, item)
+
+    BillingSvc -> ContractDB : เลือกห้องทุกห้องที่มีการใช้งานอยู่
+    note right of BillingSvc
+    SELECT roomID FROM Contract 
+    WHERE contractEndDate IS NULL 
+    OR contractEndDate > CURRENT_DATE
+    end note
+
+    BillingSvc -> BillingDB : บันทึกข้อมูลในใบแจ้งหนี้
+    note right of BillingSvc
+    INSERT INTO Billing 
+    (roomID, otherChargeName, otherChargeUnit, 
+    otherChargeAmount, billingCycle)  
+    end note
+
+    BillingDB --> BillingSvc : Success
+    BillingSvc --> UI : เพิ่มรายการสำเร็จ
+    UI --> Admin : แสดง "เพิ่มรายการเรียกเก็บสำเร็จ"
+
+else เพิ่มรายการในบางห้อง
+    Admin -> UI: เลือก เพิ่มรายการในบางห้อง
+    UI -> BillingSvc : getAllActiveRoom()
+
+    BillingSvc -> ContractDB : ค้นหาห้องที่มีการใช้งานอยู่
+    note right of BillingSvc
+    SELECT roomID FROM Contract 
+    WHERE contractEndDate IS NULL 
+    OR contractEndDate > CURRENT_DATE
+    end note
+
+    ContractDB --> BillingSvc: รายการห้อง
+    BillingSvc --> UI: แสดงรายการห้อง
+    Admin -> UI: เลือกห้องที่ต้องการเพิ่ม
+    UI -> BillingSvc : saveItemToEachRooms(month, year, item, roomID)
+
+    BillingSvc -> BillingDB : บันทึกข้อมูลในใบแจ้งหนี้
+    note right of BillingSvc
+    INSERT INTO Billing 
+    (roomID, otherChargeName, otherChargeUnit, 
+    otherChargeAmount, billingCycle)  
+    end note
+
+    BillingDB --> BillingSvc : Success
+    BillingSvc --> UI : เพิ่มรายการสำเร็จ
+    UI --> Admin : แสดง "เพิ่มรายการเรียกเก็บสำเร็จ"
+end
+
+@enduml
