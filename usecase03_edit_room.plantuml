@@ -13,14 +13,21 @@ activate UI
 UI --> UI       : แสดงฟอร์มแก้ไขห้องพัก
 
 Admin -> UI      : ปรับอัตราค่าเช่า หรือ สถานะห้องพัก
-UI --> UI       : updateFormData
+UI --> UI       : แสดงข้อมูลที่แก้ไข
 
 Admin -> UI      : เลือก "บันทึก"
 UI -> MSROOM    : updateRoom(roomId, newPrice, newStatus)
 activate MSROOM
 
-MSROOM -> RoomDB: UPDATE Room\nSET roomPrice=newPrice, status=newStatus\nWHERE roomId=${roomId}
+MSROOM -> RoomDB: บันทึกข้อมูลใหม่
+note right of  MSROOM
+UPDATE Room
+SET roomPrice=newPrice, status=newStatus
+WHERE roomId=${roomId}
+end note
+
 activate RoomDB
+
 
 RoomDB --> MSROOM: updateSuccess
 deactivate RoomDB
