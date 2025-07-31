@@ -1,0 +1,57 @@
+@startuml Use Case 22: การแก้ไขหน่วยค่าน้ำ/ค่าไฟฟ้า
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 22: การแก้ไขหน่วยค่าน้ำ/ค่าไฟฟ้า
+
+actor "ผู้ดูแล" as Admin
+participant "UI" as UI
+participant "BillingService" as BillingSvc
+database "Meter" as MeterDB
+database "Contract" as ContractDB
+
+Admin -> UI : เลือกเดือน/ปี ที่ต้องการแก้ไขหน่วยมิเตอร์
+activate UI
+
+UI -> BillingSvc : getEditableMeterData(month, year)
+BillingSvc -> ContractDB : ดึงรายชื่อห้องที่ยังอยู่ในสัญญา
+note right of BillingSvc
+SELECT roomID FROM Contract \n
+WHERE contractEndDate IS NULL OR contractEndDate > CURRENT_DATE
+end note
+
+BillingSvc -> MeterDB : ดึงเลขมิเตอร์เดือนก่อนหน้า และเดือนปัจจุบัน
+note right of BillingSvc
+SELECT meterNumber, roomID, billingCycle \n
+FROM Meter \n
+WHERE roomID IN (rooms) \n
+AND billingCycle IN (month-1, month)
+end note
+
+MeterDB --> BillingSvc : รายการเลขมิเตอร์
+BillingSvc --> UI : แสดงข้อมูลเดิมให้แก้ไข (ห้อง + เดือนก่อน + เดือนปัจจุบัน)
+
+Admin -> UI : แก้ไขเลขมิเตอร์ใหม่
+UI -> UI : คำนวณหน่วยใช้ใหม่ = เลขใหม่ - เดือนก่อน
+
+alt หน่วยใหม่ < หน่วยเก่า
+    UI -> Admin : แสดง "เลขมิเตอร์ต้องมากกว่าหรือเท่ากับเดือนก่อนหน้า"
+    Admin -> UI : แก้ไขเลขมิเตอร์ใหม่
+    deactivate UI
+    
+else แก้ไขถูกต้อง
+    Admin -> UI : กดบันทึก
+    UI -> BillingSvc : updateMeterValue(roomID, newMeterValue, month)
+
+    BillingSvc -> MeterDB : 
+
+    note over  MeterDB
+        UPDATE Meter SET meterNumber = {newMeterValue} \n
+        WHERE roomID = ? AND billingCycle = ?
+    end note
+
+
+    MeterDB --> BillingSvc : Success
+    BillingSvc --> UI : แสดง "บันทึกสำเร็จ"
+    deactivate UI
+end
+
+@enduml
