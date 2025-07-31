@@ -1,0 +1,37 @@
+@startuml Use Case 25: การส่งใบแจ้งหนี้ผ่านช่องทางออนไลน์
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 25: การส่งใบแจ้งหนี้ผ่านช่องทางออนไลน์
+
+actor "ผู้ดูแล" as Admin
+participant "UI" as UI
+participant "BillingService" as BillingSvc
+database "Billing" as BillingDB
+database "Contract JOIN \nTennent" as ContractDB
+participant "LineService" as LineAPI
+
+Admin -> UI : เลือกเดือน/ปี ที่ต้องการส่งใบแจ้งหนี้
+UI -> BillingSvc : sendInvoices(month, year)
+
+BillingSvc -> BillingDB : ดึงใบแจ้งหนี้ที่ออกแล้วของเดือนนั้น
+note right of BillingSvc
+SELECT * FROM Billing WHERE billingCycle = ?
+end note
+
+loop สำหรับแต่ละห้องที่มีใบแจ้งหนี้
+    BillingSvc -> ContractDB : ตรวจสอบว่าห้องเชื่อม LINE หรือยัง
+    note right of BillingSvc
+    SELECT lineID FROM joinDB
+    WHERE roomID = ? 
+    end note
+
+    alt lineID มีอยู่
+        BillingSvc -> LineAPI : ส่งข้อความ + ไฟล์ใบแจ้งหนี้ (PDF/Image)
+        LineAPI --> BillingSvc : ส่งสำเร็จ
+    else ไม่มี lineID
+        BillingSvc -> UI : บันทึกห้องที่ส่งไม่สำเร็จ (ไม่เชื่อม LINE)
+    end
+end
+
+BillingSvc --> UI : แสดง "ส่งใบแจ้งหนี้สำเร็จ" + รายการห้องที่ส่งไม่สำเร็จ
+UI -> Admin : แสดงผลลัพธ์
+@enduml

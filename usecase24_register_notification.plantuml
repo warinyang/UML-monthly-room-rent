@@ -8,6 +8,8 @@ participant "ContractService" as ContractSvc
 
 
 database "Contract" as ContractDB
+database "Tenant" as TenantDB
+
 
 Tenant -> App : เชื่อมต่อบัญชี LINE กับระบบ
 App -> App : ดึง LINE ID ของผู้เช่า
@@ -33,6 +35,12 @@ ContractDB --> ContractSvc : ตรงกับข้อมูลผู้เช
 end note
 
 ContractDB --> ContractSvc : เจอข้อมูลตรงกัน 
+
+ContractSvc -> TenantDB : เพิ่มบัญชีไลน์ลงในฐานข้อมูล
+note over ContractDB
+UPDATE Tenant SET LineId=บัญชีไลน์ของผู้เช่า
+WHERE roomID = ? AND billingCycle = ?
+end note
 ContractSvc --> App : สมัครสำเร็จ
 App -> Tenant : แสดง "สมัครรับใบแจ้งหนี้เรียบร้อยแล้ว"
 @enduml
