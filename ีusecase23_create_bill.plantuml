@@ -1,0 +1,64 @@
+@startuml Use Case 23: การสร้างใบแจ้งหนี้
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 23: การสร้างใบแจ้งหนี้
+
+actor "ผู้ดูแล" as Admin
+participant "UI" as UI
+participant "BillingService" as BillingSvc
+database "Contract" as ContractDB
+database "Meter" as MeterDB
+database "Billing" as BillingDB
+database "UtilityRate" as RateDB
+
+Admin -> UI : เลือกเดือน/ปี ที่ต้องการสร้างใบแจ้งหนี้
+UI -> BillingSvc : generateInvoices(month, year)
+
+BillingSvc -> ContractDB : ดึงห้องที่ยังอยู่ในสัญญา
+note right of BillingSvc
+SELECT roomID FROM Contract \n
+WHERE contractEndDate IS NULL OR contractEndDate > CURRENT_DATE
+end note
+
+BillingSvc -> MeterDB : ดึงเลขมิเตอร์เดือนก่อนหน้า และปัจจุบัน
+note right of BillingSvc
+SELECT roomID, meterNumber, meterID, UtilityRateID, billingCycle \n
+FROM Meter WHERE billingCycle IN (month-1, month)
+end note
+
+BillingSvc -> RateDB : ดึงราคาต่อหน่วยจาก UtilityRate
+note right of BillingSvc
+SELECT utilityRateID, pricePerUnit FROM UtilityRate
+end note
+
+
+BillingSvc -> BillingDB : ตรวจสอบว่าห้องมีใบแจ้งหนี้อยู่แล้วหรือไม่ \nที่ถูกสร้างตอนเพิ่มรายการเรียกเก็บเพิ่มเติมของเดือน/ปี นั้น
+note right of BillingSvc
+SELECT * FROM Billing \n
+WHERE roomID = ? AND billingCycle = ?
+end note
+
+alt พบรายการอยู่แล้ว
+    BillingSvc -> BillingDB : อัปเดตรายการใบแจ้งหนี้ในรายการห้องเดิม
+    note right of BillingSvc
+    UPDATE Billing SET \n
+    waterUsageUnit = ?, waterUsagePrice = ?, \n
+    electricityUsageUnit = ?, electricityUsagePrice = ?, \n
+    otherChargeAmount = ?, otherChargeName = ? \n
+    WHERE roomID = ? AND billingCycle = ?
+    end note
+else ไม่พบรายการ
+    BillingSvc -> BillingDB : สร้างใบแจ้งหนี้ห้องละ 1 รายการ
+    note right of BillingSvc
+    INSERT INTO Billing (
+        roomID, waterUsageUnit, waterUsagePrice,
+        electricityUsageUnit, electricityUsagePrice,
+        otherChargeAmount, otherChargeName,
+        billingCycle
+    )
+    end note
+end
+
+
+BillingDB --> BillingSvc : Success
+BillingSvc --> UI : แสดงข้อความ "ออกใบแจ้งหนี้สำเร็จ"
+UI --> Admin : แสดงรายการใบแจ้งหนี้
