@@ -1,6 +1,6 @@
-@startuml Use Case 21: เพิ่มรายการคืน/เรียกเก็บเพิ่มเติม
+@startuml Use Case 22: เพิ่มรายการคืน/เรียกเก็บเพิ่มเติม
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 21: เพิ่มรายการคืน/เรียกเก็บเพิ่มเติม
+title Use Case 22: เพิ่มรายการคืน/เรียกเก็บเพิ่มเติม
 
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI

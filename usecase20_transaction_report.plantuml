@@ -1,6 +1,6 @@
-@startuml Use Case 19: การออกรายงานรายรับ/รายจ่าย
+@startuml Use Case 20: การออกรายงานรายรับ/รายจ่าย
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 19: การออกรายงานรายรับ/รายจ่าย
+title Use Case 20: การออกรายงานรายรับ/รายจ่าย
 
 actor "พนักงานบัญชี" as Accountant
 participant "UI" as UI
@@ -31,3 +31,4 @@ deactivate AccMS
 
 ' UI -> UI : แสดงกราฟ/ตารางรายงานให้พนักงานบัญชีดู
 @enduml
+

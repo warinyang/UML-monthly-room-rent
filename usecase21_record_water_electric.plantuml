@@ -1,7 +1,7 @@
 
-@startuml Use Case 20: การบันทึกหน่วยค่าน้ำ/ค่าไฟฟ้า
+@startuml Use Case 21: การบันทึกหน่วยค่าน้ำ/ค่าไฟฟ้า
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 20: การบันทึกหน่วยค่าน้ำ/ค่าไฟฟ้า
+title Use Case 21: การบันทึกหน่วยค่าน้ำ/ค่าไฟฟ้า
 
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI

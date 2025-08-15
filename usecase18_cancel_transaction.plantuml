@@ -1,6 +1,6 @@
-@startuml Use Case 17: การยกเลิกรายรับ/รายจ่าย
+@startuml Use Case 18: การยกเลิกรายรับ/รายจ่าย
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 17: การยกเลิกรายรับ/รายจ่าย
+title Use Case 18: การยกเลิกรายรับ/รายจ่าย
 
 actor "พนักงานบัญชี" as Accountant
 participant "UI" as UI

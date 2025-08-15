@@ -1,6 +1,6 @@
-@startuml Use Case 15: การแก้ไขข้อมูลสัญญา
+@startuml Use Case 16: การแก้ไขข้อมูลสัญญา
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 15: การแก้ไขข้อมูลสัญญา
+title Use Case 16: การแก้ไขข้อมูลสัญญา
 
 actor "ผู้ดูแลระบบ" as Admin
 participant "UI" as UI

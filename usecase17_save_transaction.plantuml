@@ -1,6 +1,6 @@
-@startuml Use Case 16: การบันทึกรายรับ/รายจ่าย
+@startuml Use Case 17: การบันทึกรายรับ/รายจ่าย
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 16: การบันทึกรายรับ/รายจ่าย
+title Use Case 17: การบันทึกรายรับ/รายจ่าย
 
 actor "พนักงานบัญชี" as Accountant
 participant "UI" as UI

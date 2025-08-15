@@ -1,6 +1,6 @@
-@startuml Use Case 18: การบันทึกการชำระเงินออนไลน์อัตโนมัติ
+@startuml Use Case 19: การบันทึกการชำระเงินออนไลน์อัตโนมัติ
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 18: การบันทึกการชำระเงินออนไลน์อัตโนมัติ
+title Use Case 19: การบันทึกการชำระเงินออนไลน์อัตโนมัติ
 
 actor "ระบบรับชำระเงิน" as PaymentGateway
 participant "Payment \nMicroservice" as pyMS
@@ -39,5 +39,4 @@ end
 
 deactivate pyMS
 @enduml
-
 
