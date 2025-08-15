@@ -4,7 +4,7 @@ skinparam defaultFontName "TH Sarabun New"
 
 actor      "ผู้ดูแล"       as  Admin
 participant "UI" as  UI
-participant "RoomdService" as  Model
+participant "RoomService" as  Model
 database    "ROOM DB "   as Room
 
 Admin -> UI : เลือก "รายการห้องพัก"
