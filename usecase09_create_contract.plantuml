@@ -39,7 +39,7 @@ end
 alt ผู้ดูแลกรอกวันที่สิ้นสุดสัญญา
 UI -> UI         :  contractEndDate = วันที่สิ้นสุดสัญญา
 else ผู้ดูแล "ไม่ได้" กรอกวันที่เริ่มต้นสัญญา 
-UI -> UI         :  =contractEndDate = today()
+UI -> UI         :  =contractEndDate = NULL
 end
 
 UI -> UI  : ValiDateFormFormat()
