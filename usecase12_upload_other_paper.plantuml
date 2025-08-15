@@ -1,0 +1,37 @@
+@startuml  Use Case 12: การอัปโหลดเอกสารอื่นๆ
+title Use Case 12: การอัปโหลดเอกสารอื่นๆ
+skinparam defaultFontName "TH Sarabun New"
+
+actor "ผู้ดูแลระบบ" as Admin
+participant "UI" as UI
+participant "กล้อง" as Camera
+
+Admin -> UI      : เลือก "เอกสารเพิ่มเติม"
+activate UI
+UI -> UI         : แสดงหน้า "อัปโหลดเอกสาร"
+
+alt ถ่ายภาพเอกสาร
+    Admin -> UI       : เลือก "ถ่ายภาพเอกสาร"
+    UI -> Camera      : ส่งคำขอเข้าถึงกล้องบนอุปกรณ์
+    activate Camera
+    Camera --> Admin  : แสดงหน้า "กล้อง"
+    deactivate Camera
+
+    Admin -> Camera   : ถ่ายภาพเอกสาร
+    activate Camera
+    Camera --> UI     : แสดงภาพถ่าย
+    deactivate Camera
+
+    Admin -> UI       : ยืนยันภาพถ่าย
+    UI -> UI          : แสดงภาพที่อัปโหลด
+
+else อัปโหลดเอกสารจากเครื่อง
+    Admin -> UI       : เลือกไฟล์เอกสารจากเครื่อง \n (เช่น เอกสารยืนยันตัวตน หรือหลักฐานการชำระเงิน)
+    alt ประเภทไฟล์ถูกต้อง
+        UI -> UI      : แสดงไฟล์เอกสาร
+        Admin -> UI   : ยืนยันไฟล์เอกสาร
+    else ประเภทไฟล์ไม่รองรับ (ไม่ใช่ pdf/png/jpg)
+        UI -> UI      : แจ้งเตือน "กรุณาอัปโหลดไฟล์อีกครั้ง"
+    end
+end
+@enduml

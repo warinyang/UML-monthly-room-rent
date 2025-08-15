@@ -1,37 +1,41 @@
-@startuml Use Case 10: การอัปโหลดสัญญากระดาษ
-title Use Case 11: การอัปโหลดเอกสารอื่นๆ
+@startuml use case 11 การอัปโหลดสัญญากระดาษ
+title Use Case 11 การอัปโหลดสัญญากระดาษ
 skinparam defaultFontName "TH Sarabun New"
 
 actor "ผู้ดูแลระบบ" as Admin
 participant "UI" as UI
 participant "กล้อง" as Camera
 
-Admin -> UI      : เลือก "เอกสารเพิ่มเติม"
+Admin -> UI      : เลือก "อัปโหลดสัญญากระดาษ"
 activate UI
-UI -> UI         : แสดงหน้า "อัปโหลดเอกสาร"
+UI -> UI: แสดงหน้า "อัปโหลดหนังสือสัญญา"
 
-alt ถ่ายภาพเอกสาร
-    Admin -> UI       : เลือก "ถ่ายภาพเอกสาร"
-    UI -> Camera      : ส่งคำขอเข้าถึงกล้องบนอุปกรณ์
+alt ถ่ายภาพสัญญา
+    Admin -> UI  : เลือก "ถ่ายภาพสัญญา"
+    UI -> Camera: ส่งคำขอเข้าถึงกล้องบนอุปกรณ์
     activate Camera
-    Camera --> Admin  : แสดงหน้า "กล้อง"
+    Camera --> Admin: แสดงหน้า "กล้อง"
     deactivate Camera
 
-    Admin -> Camera   : ถ่ายภาพเอกสาร
+    Admin -> Camera: ถ่ายภาพสัญญา
     activate Camera
-    Camera --> UI     : แสดงภาพถ่าย
-    deactivate Camera
 
-    Admin -> UI       : ยืนยันภาพถ่าย
-    UI -> UI          : แสดงภาพที่อัปโหลด
+    Camera --> UI: แสดงภาพถ่าย
+    deactivate Camera
+    Admin -> UI: ยืนยันภาพถ่าย
 
 else อัปโหลดเอกสารจากเครื่อง
-    Admin -> UI       : เลือกไฟล์เอกสารจากเครื่อง \n (เช่น เอกสารยืนยันตัวตน หรือหลักฐานการชำระเงิน)
+    Admin -> UI      : เลือกไฟล์เอกสารหนังสือสัญญาจากเครื่อง
+
     alt ประเภทไฟล์ถูกต้อง
-        UI -> UI      : แสดงไฟล์เอกสาร
-        Admin -> UI   : ยืนยันไฟล์เอกสาร
-    else ประเภทไฟล์ไม่รองรับ (ไม่ใช่ pdf/png/jpg)
-        UI -> UI      : แจ้งเตือน "กรุณาอัปโหลดไฟล์อีกครั้ง"
+        UI -> UI : แสดงไฟล์เอกสาร
+        Admin -> UI: ยืนยันไฟล์เอกสาร
+    else ไฟล์ไม่รองรับ
+        UI->UI : แสดงข้อความ "กรุณาอัปโหลดไฟล์อีกครั้ง"
     end
+
 end
+deactivate UI
 @enduml
+
+
