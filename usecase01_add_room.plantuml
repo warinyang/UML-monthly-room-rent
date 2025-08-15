@@ -1,0 +1,54 @@
+@startuml
+skinparam defaultFontName "TH Sarabun New"
+title Use Case 01: การเพิ่มห้องพัก
+actor "ผู้ดูแล" as Admin
+participant "UI" as UI
+participant "Room Microservice" as MSROOM
+database "Room DB" as RoomDB
+
+' == เปิดฟอร์ม ==
+Admin -> UI           : เลือกเมนู "เพิ่มห้องพัก"
+activate UI
+UI -> UI              : แสดงฟอร์มกรอกข้อมูลห้องพักใหม่
+
+' == กรอกและตรวจสอบข้อมูล ==
+Admin -> UI           : กรอกข้อมูล\n• หมายเลขห้อง • ชั้น • ค่าเช่ารายเดือน\n• เฟอร์นิเจอร์/มูลค่า (ถ้ามี)
+UI -> UI              : ตรวจสอบรูปแบบข้อมูล
+
+alt ข้อมูลถูกต้อง
+    Admin -> UI       : เลือก "บันทึก"
+    UI -> MSROOM      : createRoom()
+    activate MSROOM
+
+    MSROOM -> RoomDB  : ตรวจสอบซ้ำหมายเลขห้อง
+    activate RoomDB
+    note over MSROOM, RoomDB
+    SELECT COUNT(*) as หมายเลขซ้ำ
+    FROM Room
+    WHERE roomNumber = ${roomNumber};
+    end note
+    RoomDB --> MSROOM : หมายเลขซ้ำ = 0
+    deactivate RoomDB
+
+    alt ไม่พบหมายเลขห้องซ้ำ = 0
+        MSROOM -> RoomDB  : บันทึกห้องใหม่
+        activate RoomDB
+        RoomDB --> MSROOM : บันทึกสำเร็จ 
+        deactivate RoomDB
+
+        MSROOM --> UI     : แสดงข้อความ "เพิ่มห้องพักสำเร็จ"
+        ' deactivate MSROOM
+
+
+    else พบหมายเลขห้องซ้ำ != 0
+ 
+        MSROOM --> UI     : 409 Conflict "หมายเลขห้องนี้มีอยู่ในระบบแล้ว"
+        deactivate MSROOM
+        UI --> UI      : แสดงข้อความ "หมายเลขห้องซ้ำ กรุณาเปลี่ยนหมายเลขห้อง"
+    end
+else ข้อมูลไม่ถูกต้อง
+    UI --> Admin          : แจ้งเตือนฟิลด์ที่ผิดพลาด\n(เช่น ค่าเช่าต้องมากกว่า 0)
+end
+
+deactivate UI
+@enduml
