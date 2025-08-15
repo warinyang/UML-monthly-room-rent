@@ -1,6 +1,6 @@
-@startuml Use Case 25: การส่งใบแจ้งหนี้ผ่านช่องทางออนไลน์
+@startuml Use Case 26: การส่งใบแจ้งหนี้ผ่านช่องทางออนไลน์
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 25: การส่งใบแจ้งหนี้ผ่านช่องทางออนไลน์
+title Use Case 26: การส่งใบแจ้งหนี้ผ่านช่องทางออนไลน์
 
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI

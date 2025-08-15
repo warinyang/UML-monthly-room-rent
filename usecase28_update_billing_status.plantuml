@@ -1,6 +1,6 @@
-@startuml Use Case 27: การอัปเดตสถานะใบแจ้งหนี้
+@startuml Use Case 28: การอัปเดตสถานะใบแจ้งหนี้
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 27: การอัปเดตสถานะใบแจ้งหนี้
+title Use Case 28: การอัปเดตสถานะใบแจ้งหนี้
 
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI

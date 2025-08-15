@@ -1,6 +1,6 @@
-@startuml Use Case 26: การดูประวัติใบแจ้งหนี้ย้อนหลัง
+@startuml Use Case 27: การดูประวัติใบแจ้งหนี้ย้อนหลัง
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 26: การดูประวัติใบแจ้งหนี้ย้อนหลัง
+title Use Case 27: การดูประวัติใบแจ้งหนี้ย้อนหลัง
 
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI

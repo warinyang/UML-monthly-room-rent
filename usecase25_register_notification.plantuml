@@ -1,6 +1,6 @@
-@startuml Use Case 24: การสมัครรับใบแจ้งหนี้ 
+@startuml Use Case 25: การสมัครรับใบแจ้งหนี้ 
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 24: การสมัครรับใบแจ้งหนี้
+title Use Case 25: การสมัครรับใบแจ้งหนี้
 
 actor "ผู้เช่า" as Tenant
 participant "LINE Bot / App" as App

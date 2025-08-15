@@ -1,6 +1,6 @@
-@startuml Use Case 23: การสร้างใบแจ้งหนี้
+@startuml Use Case 24: การสร้างใบแจ้งหนี้
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 23: การสร้างใบแจ้งหนี้
+title Use Case 24: การสร้างใบแจ้งหนี้
 
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI
