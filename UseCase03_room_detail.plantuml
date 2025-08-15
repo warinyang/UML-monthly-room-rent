@@ -1,6 +1,6 @@
-@startuml Use Case 02: ดูรายละเอียดห้องพัก
+@startuml Use Case 03: ดูรายละเอียดห้องพัก
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 02: ดูรายละเอียดห้องพัก
+title Use Case 03: ดูรายละเอียดห้องพัก
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI
 participant "RoomService" as  MSROOM

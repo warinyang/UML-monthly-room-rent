@@ -1,9 +1,9 @@
 @startuml
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 03: แก้ไขข้อมูลห้องพัก
+title Use Case 04: แก้ไขข้อมูลห้องพัก
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI
-participant "Microservice Room" as MSROOM
+participant "RoomService" as MSROOM
 database "Room DB" as RoomDB
 
 

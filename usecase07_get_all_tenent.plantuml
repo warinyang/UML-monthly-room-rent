@@ -1,6 +1,6 @@
-@startuml  Use Case 06: การดูรายการผู้เช่าทั้งหมด
+@startuml  Use Case 07: การดูรายการผู้เช่าทั้งหมด
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 06: การดูรายการผู้เช่าทั้งหมด
+title Use Case 07: การดูรายการผู้เช่าทั้งหมด
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI
 participant "Tenant Service" as MS

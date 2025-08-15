@@ -1,5 +1,5 @@
-@startuml Use Case 01: การแสดงรายการห้องพักทั้งหมด
-title Use Case 01: การแสดงรายการห้องพักทั้งหมด
+@startuml Use Case 02: การแสดงรายการห้องพักทั้งหมด
+title Use Case 02: การแสดงรายการห้องพักทั้งหมด
 skinparam defaultFontName "TH Sarabun New"
 
 actor      "ผู้ดูแล"       as  Admin

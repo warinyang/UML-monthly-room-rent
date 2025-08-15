@@ -1,6 +1,6 @@
 @startuml
 skinparam defaultFontName "TH Sarabun New"
-title Use Case 05: แก้ไขข้อมูลผู้เช่า
+title Use Case 06: แก้ไขข้อมูลผู้เช่า
 actor "ผู้ดูแล" as Admin
 participant "UI" as UI
 participant "Tenant Service" as MS
